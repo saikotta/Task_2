@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form & To-Do List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+        }
+        h1 {
+            text-align: center;
+            color: #3a0ca3;
+        }
+        .main-content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .card {
+            flex: 1 1 350px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+        button {
+            background: #4361ee;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #3a0ca3;
+        }
+        .error {
+            color: #e63946;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            display: none;
+        }
+        .success-message {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+        .todo-input {
+            display: flex;
+            gap: 10px;
+        }
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #eee;
+        }
+        .todo-item.done span {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        .todo-actions button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            font-size: 0.95em;
+        }
+        .btn-delete {
+            background: #e63946;
+        }
+        .btn-delete:hover {
+            background: #c1121f;
+        }
+        .btn-done {
+            background: #4cc9f0;
+            color: #222;
+        }
+        .btn-done:hover {
+            background: #3a86ff;
+            color: #fff;
+        }
+        @media (max-width: 700px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact & Task Manager</h1>
+        <div class="main-content">
+            <div class="card">
+                <h2>Contact Form</h2>
+                <form id="contactForm" autocomplete="off">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                    <div class="error" id="nameError">Please enter your name</div>
+
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address">
+                    <div class="error" id="emailError">Please enter a valid email address</div>
+
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="3" placeholder="Enter your message"></textarea>
+                    <div class="error" id="messageError">Please enter your message</div>
+
+                    <button type="submit">Send Message</button>
+                    <div class="success-message" id="successMessage">
+                        Your message has been sent successfully!
+                    </div>
+                </form>
+            </div>
+            <div class="card">
+                <h2>To-Do List</h2>
+                <div class="todo-input">
+                    <input type="text" id="todoInput" placeholder="Enter a new task">
+                    <button id="addTodoBtn">Add</button>
+                </div>
+                <ul class="todo-list" id="todoList"></ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Contact Form Validation
+        const contactForm = document.getElementById('contactForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const messageInput = document.getElementById('message');
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const messageError = document.getElementById('messageError');
+        const successMessage = document.getElementById('successMessage');
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let valid = true;
+
+            if (nameInput.value.trim() === '') {
+                nameError.style.display = 'block';
+                valid = false;
+            } else {
+                nameError.style.display = 'none';
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailInput.value.trim())) {
+                emailError.style.display = 'block';
+                valid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+
+            if (messageInput.value.trim() === '') {
+                messageError.style.display = 'block';
+                valid = false;
+            } else {
+                messageError.style.display = 'none';
+            }
+
+            if (valid) {
+                successMessage.style.display = 'block';
+                contactForm.reset();
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        // Simple To-Do List
+        const todoInput = document.getElementById('todoInput');
+        const addTodoBtn = document.getElementById('addTodoBtn');
+        const todoList = document.getElementById('todoList');
+
+        function addTask(text) {
+            const taskText = (typeof text === 'string') ? text.trim() : todoInput.value.trim();
+            if (!taskText) return;
+
+            const li = document.createElement('li');
+            li.className = 'todo-item';
+            li.innerHTML = `
+                <span>${taskText}</span>
+                <div class="todo-actions">
+                    <button class="btn-done">Done</button>
+                    <button class="btn-delete">Delete</button>
+                </div>
+            `;
+            todoList.appendChild(li);
+
+            // Done button
+            li.querySelector('.btn-done').onclick = function() {
+                li.classList.toggle('done');
+                this.textContent = li.classList.contains('done') ? 'Undo' : 'Done';
+            };
+            // Delete button
+            li.querySelector('.btn-delete').onclick = function() {
+                li.remove();
+            };
+
+            if (!text) todoInput.value = '';
+        }
+
+        addTodoBtn.onclick = () => addTask();
+        todoInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // Example tasks
+        ['Complete JavaScript project', 'Learn CSS Grid', 'Practice Flexbox', 'Read documentation']
+            .forEach(addTask);
+    </script>
+</body>
+</html>
